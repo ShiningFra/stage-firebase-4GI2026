@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  moment:
+    image: moment
+    build:
+      context: node_modules/moment
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: development
+    ports:
+      - 3000:3000
+      - 9229:9229
+    command: ["node", "--inspect=0.0.0.0:9229", "./moment.js"]

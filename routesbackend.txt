@@ -1,0 +1,32 @@
+Voici une liste des routes utilisables sur le backend, accompagnées de leurs descriptions. Cette liste est basée sur les fonctionnalités que nous avons discutées, notamment l'authentification et la gestion des courses.
+
+Routes d'Authentification
+POST /api/auth/signup
+Description: Inscription d'un nouvel utilisateur (client ou chauffeur). Les informations de l'utilisateur, y compris le nom, l'email, le numéro de téléphone et le mot de passe, sont nécessaires.
+POST /api/auth/login
+Description: Authentification d'un utilisateur. Les utilisateurs doivent fournir leur email et mot de passe pour obtenir un token JWT.
+Routes pour la Gestion des Courses
+POST /api/courses/publish
+Description: Publier une nouvelle course. Seul un chauffeur authentifié peut publier une course. Les détails de la course sont inclus dans le corps de la requête.
+GET /api/courses/my-courses
+Description: Récupérer toutes les courses publiées par le chauffeur authentifié.
+GET /api/courses/available
+Description: Récupérer toutes les courses disponibles (non réservées par un client).
+POST /api/courses/{courseId}/reserve
+Description: Réserver une course par un client authentifié. Le client doit fournir l'ID de la course à réserver.
+GET /api/courses/my-reserved-courses
+Description: Récupérer toutes les courses réservées par le client authentifié.
+GET /api/courses/my-accepted-courses
+Description: Récupérer toutes les courses acceptées par le client authentifié.
+GET /api/courses/my-incomplete-courses
+Description: Récupérer toutes les courses incomplètes du chauffeur authentifié.
+GET /api/courses/my-completed-courses
+Description: Récupérer toutes les courses complètes du client authentifié.
+DELETE /api/courses/{courseId}/cancel
+Description: Annuler une réservation de course par un client authentifié. Le client doit fournir l'ID de la course à annuler.
+DELETE /api/courses/{courseId}/delete
+Description: Supprimer une course par le chauffeur authentifié. Le chauffeur doit fournir l'ID de la course à supprimer.
+Notes
+Authentification: La plupart des routes pour la gestion des courses nécessitent que l'utilisateur soit authentifié, en utilisant un token JWT dans l'en-tête Authorization.
+Rôles d'utilisateur: Certaines routes sont accessibles uniquement aux chauffeurs ou aux clients, selon leur rôle.
+Cette liste devrait vous aider à comprendre les routes disponibles et leur utilisation dans votre application backend. Si vous avez besoin de plus de détails ou d'autres informations, n'hésitez pas à demander !

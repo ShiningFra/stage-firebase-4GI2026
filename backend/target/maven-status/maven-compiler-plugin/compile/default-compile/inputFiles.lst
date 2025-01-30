@@ -1,0 +1,15 @@
+d:\SCHOOL\RESEAU\PROJET ATHENTIFICATION PER QR CODE\stage-firebase\backend\src\main\java\com\stageapp\backend\controller\RideController.java
+d:\SCHOOL\RESEAU\PROJET ATHENTIFICATION PER QR CODE\stage-firebase\backend\src\main\java\com\stageapp\backend\repository\UserRepository.java
+d:\SCHOOL\RESEAU\PROJET ATHENTIFICATION PER QR CODE\stage-firebase\backend\src\main\java\com\stageapp\backend\model\UserRole.java
+d:\SCHOOL\RESEAU\PROJET ATHENTIFICATION PER QR CODE\stage-firebase\backend\src\main\java\com\stageapp\backend\config\WebConfig.java
+d:\SCHOOL\RESEAU\PROJET ATHENTIFICATION PER QR CODE\stage-firebase\backend\src\main\java\com\stageapp\backend\model\Vehicle.java
+d:\SCHOOL\RESEAU\PROJET ATHENTIFICATION PER QR CODE\stage-firebase\backend\src\main\java\com\stageapp\backend\security\JwtTokenProvider.java
+d:\SCHOOL\RESEAU\PROJET ATHENTIFICATION PER QR CODE\stage-firebase\backend\src\main\java\com\stageapp\backend\controller\AuthController.java
+d:\SCHOOL\RESEAU\PROJET ATHENTIFICATION PER QR CODE\stage-firebase\backend\src\main\java\com\stageapp\backend\model\Ride.java
+d:\SCHOOL\RESEAU\PROJET ATHENTIFICATION PER QR CODE\stage-firebase\backend\src\main\java\com\stageapp\backend\BackendApplication.java
+d:\SCHOOL\RESEAU\PROJET ATHENTIFICATION PER QR CODE\stage-firebase\backend\src\main\java\com\stageapp\backend\repository\RideRepository.java
+d:\SCHOOL\RESEAU\PROJET ATHENTIFICATION PER QR CODE\stage-firebase\backend\src\main\java\com\stageapp\backend\model\User.java
+d:\SCHOOL\RESEAU\PROJET ATHENTIFICATION PER QR CODE\stage-firebase\backend\src\main\java\com\stageapp\backend\repository\VehicleRepository.java
+d:\SCHOOL\RESEAU\PROJET ATHENTIFICATION PER QR CODE\stage-firebase\backend\src\main\java\com\stageapp\backend\controller\VehicleController.java
+d:\SCHOOL\RESEAU\PROJET ATHENTIFICATION PER QR CODE\stage-firebase\backend\src\main\java\com\stageapp\backend\security\SecurityConfig.java
+d:\SCHOOL\RESEAU\PROJET ATHENTIFICATION PER QR CODE\stage-firebase\backend\src\main\java\com\stageapp\backend\config\CorsConfig.java
