@@ -3,6 +3,7 @@ D:\Workspace\stage-firebase2\stage-firebase\backend\src\main\java\com\example\QR
 D:\Workspace\stage-firebase2\stage-firebase\backend\src\main\java\com\example\QRAPI\controller\SignUpRequest.java
 D:\Workspace\stage-firebase2\stage-firebase\backend\src\main\java\com\example\QRAPI\model\Chauffeur.java
 D:\Workspace\stage-firebase2\stage-firebase\backend\src\main\java\com\example\QRAPI\security\JwtRequestFilter.java
+D:\Workspace\stage-firebase2\stage-firebase\backend\src\main\java\com\example\QRAPI\BackendApplication.java
 D:\Workspace\stage-firebase2\stage-firebase\backend\src\main\java\com\example\QRAPI\model\Client.java
 D:\Workspace\stage-firebase2\stage-firebase\backend\src\main\java\com\example\QRAPI\controller\LogInRequest.java
 D:\Workspace\stage-firebase2\stage-firebase\backend\src\main\java\com\example\QRAPI\controller\AuthController.java
@@ -10,6 +11,5 @@ D:\Workspace\stage-firebase2\stage-firebase\backend\src\main\java\com\example\QR
 D:\Workspace\stage-firebase2\stage-firebase\backend\src\main\java\com\example\QRAPI\security\JwtUtil.java
 D:\Workspace\stage-firebase2\stage-firebase\backend\src\main\java\com\example\QRAPI\repository\ChauffeurRepository.java
 D:\Workspace\stage-firebase2\stage-firebase\backend\src\main\java\com\example\QRAPI\security\SecurityConfig.java
-D:\Workspace\stage-firebase2\stage-firebase\backend\src\main\java\com\stageapp\backend\BackendApplication.java
 D:\Workspace\stage-firebase2\stage-firebase\backend\src\main\java\com\example\QRAPI\model\UserRole.java
 D:\Workspace\stage-firebase2\stage-firebase\backend\src\main\java\com\example\QRAPI\model\Course.java

@@ -1,4 +1,4 @@
-package com.stageapp.backend;
+package com.example.QRAPI;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
