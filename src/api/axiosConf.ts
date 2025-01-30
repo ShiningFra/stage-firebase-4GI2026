@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const api = axios.create({
+const ap = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URLL,
     headers: {
         'Content-Type': 'application/json',
@@ -8,7 +8,7 @@ const api = axios.create({
 });
 
 // Add a request interceptor to add the JWT token to requests
-api.interceptors.request.use(
+ap.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
         if (token) {
@@ -22,7 +22,7 @@ api.interceptors.request.use(
 );
 
 // Add a response interceptor to handle authentication errors
-api.interceptors.response.use(
+ap.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
@@ -34,4 +34,4 @@ api.interceptors.response.use(
     }
 );
 
-export default api;
+export default ap;
