@@ -20,6 +20,65 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
+## Configuration de l'environnement
+
+### Variables d'environnement Backend
+1. Copiez le fichier `.env.example` vers `.env` dans le dossier `backend/` :
+```bash
+cp backend/.env.example backend/.env
+```
+
+2. Modifiez les valeurs dans `backend/.env` avec vos propres configurations :
+- `JWT_SECRET_KEY` : Clé secrète pour la génération des tokens JWT
+- `DB_URL` : URL de votre base de données MySQL
+- `DB_USERNAME` : Nom d'utilisateur de la base de données
+- `DB_PASSWORD` : Mot de passe de la base de données
+- `SERVER_PORT` : Port du serveur backend (par défaut: 8081)
+- `CORS_ALLOWED_ORIGINS` : URL du frontend (par défaut: http://localhost:3000)
+
+### Variables d'environnement Frontend
+1. Copiez le fichier `.env.example` vers `.env` à la racine du projet :
+```bash
+cp .env.example .env
+```
+
+2. Modifiez les valeurs dans `.env` avec vos propres configurations :
+- `NEXT_PUBLIC_API_URL` : URL de l'API backend (par défaut: http://localhost:8080/api)
+- `NEXT_PUBLIC_APP_URL` : URL de l'application frontend (par défaut: http://localhost:3000)
+
+### Sécurité
+- Les fichiers `.env` sont ignorés par Git pour protéger les informations sensibles
+- Ne commitez JAMAIS de fichiers contenant des secrets ou mots de passe
+- Utilisez toujours des variables d'environnement pour les informations sensibles
+
+## Installation
+
+### Backend (Spring Boot)
+```bash
+cd backend
+./mvnw clean install
+```
+
+### Frontend (React)
+```bash
+npm install
+```
+
+## Démarrage
+
+### Backend
+```bash
+cd backend
+./mvnw spring-boot:run
+```
+
+### Frontend
+```bash
+npm start
+```
+
+L'application sera accessible à l'adresse : http://localhost:3000
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
