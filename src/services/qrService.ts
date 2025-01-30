@@ -1,4 +1,4 @@
-import api from '../api/axiosConfig';
+import api from '../api/axiosConf';
 
 export const qrService = {
     // Générer un QR code pour une course
