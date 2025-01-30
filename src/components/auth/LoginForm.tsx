@@ -33,13 +33,6 @@ export default function LoginForm({
                 >
                     Email
                 </button>
-                <button
-                    type="button"
-                    className={`px-4 py-2 rounded ${loginMethod === 'phone' ? 'bg-indigo-600 text-white' : 'bg-gray-200'}`}
-                    onClick={() => setLoginMethod('phone')}
-                >
-                    Phone
-                </button>
             </div>
             {loginMethod === 'email' ? <LoginFormEmail
                 onForgottenPasswordClick={onForgottenPasswordClick}

@@ -44,6 +44,7 @@ public ResponseEntity<?> signUp(@RequestBody SignUpRequest signUpRequest) {
         Client client = new Client();
         client.setNom(signUpRequest.getFullName());
         client.setEmail(signUpRequest.getEmail());
+	client.setPrenom("Cli");
         client.setTelephone(signUpRequest.getPhoneNumber());
         client.setPassword(hashedPassword); // Utiliser le mot de passe haché
 
@@ -53,6 +54,7 @@ public ResponseEntity<?> signUp(@RequestBody SignUpRequest signUpRequest) {
     } else {
         Chauffeur chauffeur = new Chauffeur();
         chauffeur.setNom(signUpRequest.getFullName());
+	chauffeur.setPrenom("Chauff");
         chauffeur.setEmail(signUpRequest.getEmail());
         chauffeur.setTelephone(signUpRequest.getPhoneNumber());
         chauffeur.setPassword(hashedPassword); // Utiliser le mot de passe haché
