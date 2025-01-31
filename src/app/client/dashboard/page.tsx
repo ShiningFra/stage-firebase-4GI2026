@@ -12,6 +12,7 @@ export default function ClientDashboard() {
   const [availableCourses, setAvailableCourses] = useState<Course[]>([]);
   const [myCourses, setMyCourses] = useState<Course[]>([]);
   const [activeTab, setActiveTab] = useState<'available' | 'my-courses'>('available');
+  const token = localStorage.getItem('token'); // Récupérer le token une fois
 
   useEffect(() => {
     if (authService.getUserRole() !== 'CLIENT') {
@@ -24,8 +25,8 @@ export default function ClientDashboard() {
   const loadCourses = async () => {
     try {
       const [available, accepted] = await Promise.all([
-        courseService.getAvailableCourses(),
-        courseService.getMyAcceptedCourses()
+        courseService.getAvailableCourses(token as string),
+        courseService.getMyAcceptedCourses(token as string)
       ]);
       setAvailableCourses(available);
       setMyCourses(accepted);
@@ -36,7 +37,7 @@ export default function ClientDashboard() {
 
   const handleReserve = async (courseId: number) => {
     try {
-      await courseService.reserveCourse(courseId);
+      await courseService.reserveCourse(courseId, token as string);
       loadCourses();
     } catch (error) {
       console.error('Erreur lors de la réservation:', error);
@@ -45,7 +46,7 @@ export default function ClientDashboard() {
 
   const handleCancel = async (courseId: number) => {
     try {
-      await courseService.cancelCourse(courseId);
+      await courseService.cancelCourse(courseId, token as string);
       loadCourses();
     } catch (error) {
       console.error('Erreur lors de l\'annulation:', error);

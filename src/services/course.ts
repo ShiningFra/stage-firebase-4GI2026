@@ -7,68 +7,88 @@ export interface Course {
     prix: number;
     date: string;
     completed: boolean;
-    chauffeur?: any;
-    client?: any;
+    chauffeur?: any; // Remplacez par un type spécifique si possible
+    client?: any;    // Remplacez par un type spécifique si possible
 }
 
 export const courseService = {
     // Chauffeur : Publier une nouvelle course
-    publishCourse: async (course: Partial<Course>) => {
-        const response = await api.post('/courses/publish', course);
+    publishCourse: async (course: Partial<Course>, token: string) => {
+        const response = await api.post('/courses/publish', course, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
         return response.data;
     },
 
     // Chauffeur : Obtenir mes courses
-    getMyCourses: async () => {
-        const response = await api.get('/courses/my-courses');
+    getMyCourses: async (token: string) => {
+        const response = await api.get('/courses/my-courses', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
         return response.data;
     },
 
     // Client : Obtenir les courses disponibles
-    getAvailableCourses: async () => {
-        const response = await api.get('/courses/available');
+    getAvailableCourses: async (token: string) => {
+        const response = await api.get('/courses/available', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
         return response.data;
     },
 
     // Client : Réserver une course
-    reserveCourse: async (courseId: number) => {
-        const response = await api.post(`/courses/${courseId}/reserve`);
+    reserveCourse: async (courseId: number, token: string) => {
+        const response = await api.post(`/courses/${courseId}/reserve`, {}, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
         return response.data;
     },
 
     // Chauffeur : Obtenir les courses réservées
-    getMyReservedCourses: async () => {
-        const response = await api.get('/courses/my-reserved-courses');
+    getMyReservedCourses: async (token: string) => {
+        const response = await api.get('/courses/my-reserved-courses', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
         return response.data;
     },
 
     // Client : Obtenir mes courses acceptées non complétées
-    getMyAcceptedCourses: async () => {
-        const response = await api.get('/courses/my-accepted-courses');
+    getMyAcceptedCourses: async (token: string) => {
+        const response = await api.get('/courses/my-accepted-courses', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
         return response.data;
     },
 
     // Chauffeur : Obtenir les courses non complétées
-    getMyIncompleteCourses: async () => {
-        const response = await api.get('/courses/my-incomplete-courses');
+    getMyIncompleteCourses: async (token: string) => {
+        const response = await api.get('/courses/my-incomplete-courses', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
         return response.data;
     },
 
     // Client : Obtenir l'historique des courses complétées
-    getMyCompletedCourses: async () => {
-        const response = await api.get('/courses/my-completed-courses');
+    getMyCompletedCourses: async (token: string) => {
+        const response = await api.get('/courses/my-completed-courses', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
         return response.data;
     },
 
     // Chauffeur : Obtenir l'historique des courses complétées
-    getMyCompletedCoursesDriver: async () => {
-        const response = await api.get('/courses/my-completed-courses-driver');
+    getMyCompletedCoursesDriver: async (token: string) => {
+        const response = await api.get('/courses/my-completed-courses-driver', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
         return response.data;
     },
 
     // Client : Annuler une course
-    cancelCourse: async (courseId: number) => {
-        const response = await api.delete(`/courses/${courseId}/cancel`);
+    cancelCourse: async (courseId: number, token: string) => {
+        const response = await api.delete(`/courses/${courseId}/cancel`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
         return response.data;
     }
 };

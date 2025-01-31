@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+console.log('Axios config is being executed');
+
 const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL,
     headers: {
@@ -7,27 +9,29 @@ const api = axios.create({
     },
 });
 
-// Add a request interceptor to add the JWT token to requests
+// Intercepteur de requête pour ajouter le token JWT
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
-	console.log('Token:', localStorage.getItem('token'));
+        /*console.log('Token:', token); // Vérifiez la valeur du token
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
-        }
+        }*/
+        console.log("Config : ", config);
         return config;
     },
     (error) => {
+        console.error('Request error:', error);
         return Promise.reject(error);
     }
 );
 
-// Add a response interceptor to handle authentication errors
+// Intercepteur de réponse pour gérer les erreurs d'authentification
 api.interceptors.response.use(
     (response) => response,
     (error) => {
+        console.error('Response error:', error);
         if (error.response?.status === 401) {
-            // Token is expired or invalid
             localStorage.removeItem('token');
             window.location.href = '/login';
         }
