@@ -18,6 +18,7 @@ export const authService = {
         const response = await api.post('/auth/login', data);
         if (response.data) {
             localStorage.setItem('token', response.data);
+            console.log('Token:', localStorage.getItem('token'));
             // Décoder le token pour obtenir le rôle
             const base64Url = response.data.split('.')[1];
             const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
