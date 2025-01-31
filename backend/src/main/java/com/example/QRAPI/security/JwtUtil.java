@@ -19,7 +19,7 @@ import java.util.function.Function;
 
 @Service
 public class JwtUtil {
-    @Value("${JWT_SECRET_KEY}")
+    @Value("cdd8c6184a5e56385a622578112b3b7500449fbcf980b434d5583983e1e79bd6")
     private String secretKeyString;
     
     private SecretKey getSigningKey() {

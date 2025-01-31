@@ -10,6 +10,7 @@ import { authService } from '@/services/auth';
 export default function ChauffeurDashboard() {
   const router = useRouter();
   const [courses, setCourses] = useState<Course[]>([]);
+  const [reservedCourses, setReservedCourses] = useState<Course[]>([]); // Nouvel état pour les courses réservées
   const [showNewCourseForm, setShowNewCourseForm] = useState(false);
   const [newCourse, setNewCourse] = useState({
     depart: '',
@@ -17,6 +18,9 @@ export default function ChauffeurDashboard() {
     prix: '',
     date: ''
   });
+  const [activeTab, setActiveTab] = useState<'my-courses' | 'reserved-courses'>('my-courses'); // Onglets
+
+  const token = localStorage.getItem('token'); // Récupérer le token une fois
 
   useEffect(() => {
     if (authService.getUserRole() !== 'CHAUFFEUR') {
@@ -24,14 +28,24 @@ export default function ChauffeurDashboard() {
       return;
     }
     loadCourses();
+    loadReservedCourses(); // Charger les courses réservées
   }, []);
 
   const loadCourses = async () => {
     try {
-      const myCourses = await courseService.getMyCourses();
+      const myCourses = await courseService.getMyCourses(token as string);
       setCourses(myCourses);
     } catch (error) {
       console.error('Erreur lors du chargement des courses:', error);
+    }
+  };
+
+  const loadReservedCourses = async () => {
+    try {
+      const myReservedCourses = await courseService.getMyReservedCourses(token as string);
+      setReservedCourses(myReservedCourses);
+    } catch (error) {
+      console.error('Erreur lors du chargement des courses réservées:', error);
     }
   };
 
@@ -41,7 +55,7 @@ export default function ChauffeurDashboard() {
       await courseService.publishCourse({
         ...newCourse,
         prix: parseFloat(newCourse.prix)
-      });
+      }, token as string);
       setShowNewCourseForm(false);
       setNewCourse({ depart: '', destination: '', prix: '', date: '' });
       loadCourses();
@@ -72,82 +86,49 @@ export default function ChauffeurDashboard() {
           </button>
         </div>
 
-        {showNewCourseForm && (
-          <div className="card mb-8">
-            <h2 className="text-xl font-semibold mb-4">Créer une nouvelle course</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="depart" className="label">
-                  Lieu de départ
-                </label>
-                <input
-                  type="text"
-                  id="depart"
-                  name="depart"
-                  required
-                  className="input"
-                  value={newCourse.depart}
-                  onChange={handleChange}
-                />
-              </div>
-              <div>
-                <label htmlFor="destination" className="label">
-                  Destination
-                </label>
-                <input
-                  type="text"
-                  id="destination"
-                  name="destination"
-                  required
-                  className="input"
-                  value={newCourse.destination}
-                  onChange={handleChange}
-                />
-              </div>
-              <div>
-                <label htmlFor="prix" className="label">
-                  Prix (€)
-                </label>
-                <input
-                  type="number"
-                  id="prix"
-                  name="prix"
-                  required
-                  min="0"
-                  step="0.01"
-                  className="input"
-                  value={newCourse.prix}
-                  onChange={handleChange}
-                />
-              </div>
-              <div>
-                <label htmlFor="date" className="label">
-                  Date et heure
-                </label>
-                <input
-                  type="datetime-local"
-                  id="date"
-                  name="date"
-                  required
-                  className="input"
-                  value={newCourse.date}
-                  onChange={handleChange}
-                />
-              </div>
-              <button type="submit" className="btn btn-primary">
-                Créer la course
-              </button>
-            </form>
-          </div>
-        )}
+        <div className="flex mb-6 space-x-4">
+          <button
+            className={`btn ${activeTab === 'my-courses' ? 'btn-primary' : 'bg-gray-200'}`}
+            onClick={() => {
+              setActiveTab('my-courses');
+              loadCourses(); // Recharger les courses
+            }}
+          >
+            Mes Courses
+          </button>
+          <button
+            className={`btn ${activeTab === 'reserved-courses' ? 'btn-primary' : 'bg-gray-200'}`}
+            onClick={() => {
+              setActiveTab('reserved-courses');
+              loadReservedCourses(); // Recharger les courses réservées
+            }}
+          >
+            Courses Réservées
+          </button>
+        </div>
 
         <div>
-          <h2 className="text-xl font-semibold mb-4">Mes Courses</h2>
-          <div className="grid-courses">
-            {courses.map((course) => (
-              <CourseCard key={course.id} course={course} />
-            ))}
-          </div>
+          {activeTab === 'my-courses' && (
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Mes Courses</h2>
+              <div className="grid-courses">
+                {courses.map((course) => (
+                  <CourseCard key={course.id} course={course} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'reserved-courses' && (
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Courses Réservées</h2>
+              <div className="grid-courses">
+                {reservedCourses.map((course) => (
+                  <CourseCard key={course.id} course={course} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>

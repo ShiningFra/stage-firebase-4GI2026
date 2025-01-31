@@ -13,10 +13,10 @@ const api = axios.create({
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
-        /*console.log('Token:', token); // Vérifiez la valeur du token
+        console.log('Token:', token); // Vérifiez la valeur du token
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
-        }*/
+        }
         console.log("Config : ", config);
         return config;
     },
@@ -35,6 +35,10 @@ api.interceptors.response.use(
             localStorage.removeItem('token');
             window.location.href = '/login';
         }
+	if (error.response?.status === 403) {
+    console.error('Access denied. You do not have permission to access this resource.');
+    // Redirigez ou affichez un message d'erreur à l'utilisateur
+}
         return Promise.reject(error);
     }
 );

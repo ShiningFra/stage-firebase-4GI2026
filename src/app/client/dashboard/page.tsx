@@ -12,7 +12,8 @@ export default function ClientDashboard() {
   const [availableCourses, setAvailableCourses] = useState<Course[]>([]);
   const [myCourses, setMyCourses] = useState<Course[]>([]);
   const [activeTab, setActiveTab] = useState<'available' | 'my-courses'>('available');
-  const token = localStorage.getItem('token'); // Récupérer le token une fois
+  const token = authService.getToken(); // Récupérer le token une fois
+console.log('Token', token);
 
   useEffect(() => {
     if (authService.getUserRole() !== 'CLIENT') {

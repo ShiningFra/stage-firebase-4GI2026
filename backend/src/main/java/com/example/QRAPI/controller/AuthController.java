@@ -15,7 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import java.util.Collections;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -71,13 +74,13 @@ public ResponseEntity<?> login(@RequestBody LogInRequest loginRequest) {
         Client client = clientRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
         if (passwordEncoder.matches(loginRequest.getPassword(), client.getPassword())) {
             String token = jwtUtil.generateToken(client.getEmail(), "CLIENT");
-            return ResponseEntity.ok(token);
+            return ResponseEntity.ok(Collections.singletonMap("token", token)); // Retourné sous forme d'objet JSON
         }
     } else if (chauffeurRepository.existsByEmail(loginRequest.getEmail())) {
         Chauffeur chauffeur = chauffeurRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
         if (passwordEncoder.matches(loginRequest.getPassword(), chauffeur.getPassword())) {
             String token = jwtUtil.generateToken(chauffeur.getEmail(), "CHAUFFEUR");
-            return ResponseEntity.ok(token);
+            return ResponseEntity.ok(Collections.singletonMap("token", token)); // Retourné sous forme d'objet JSON
         }
     }
     return ResponseEntity.status(401).body("Invalid credentials");
