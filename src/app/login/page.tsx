@@ -14,17 +14,18 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await authService.login({ email, password });
-      const userRole = localStorage.getItem('userRole');
-      if (userRole === 'CHAUFFEUR') {
-        router.push('/chauffeur/dashboard');
-      } else {
-        router.push('/client/dashboard');
-      }
+        const { token } = await authService.login({ email, password }); // Assurez-vous que le token est renvoyé
+        localStorage.setItem('authToken', token); // Stockez le token dans localStorage
+        const userRole = localStorage.getItem('userRole');
+        if (userRole === 'CHAUFFEUR') {
+            router.push('/chauffeur/dashboard');
+        } else {
+            router.push('/client/dashboard');
+        }
     } catch (err) {
-      setError('Email ou mot de passe incorrect');
+        setError('Email ou mot de passe incorrect');
     }
-  };
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">

@@ -108,8 +108,10 @@ canvas {
 }
 
 /* Loading States */
-.loading {
-  @apply animate-pulse bg-gray-200 rounded;
+@layer utilities {
+  .loading {
+    @apply animate-pulse bg-gray-200 rounded;
+  }
 }
 
 /* Animations */
