@@ -7,6 +7,7 @@ import { setAuthCookie } from "@/app/lib/firebase";
 // import {toast} from "react-toastify";
 import { toast } from "react-hot-toast";
 import { authService } from "@/services/authService";
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -69,27 +70,35 @@ export default function LoginFormEmail({onForgottenPasswordClick,onSignUpClick}:
 
 
     const handleSubmitEmail = async (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        if (!validateFormMail()) {
-            return;
-        }
-        setIsLoadingEmail(true);
-        setError(null);
-        const { email, password,rememberMe } = formData;
-        try {
-            await authService.login({
-                email: formData.email,
-                password: formData.password,
-                });
-	setLoginSuccess(true);
-        setAuthCookie()
+    event.preventDefault();
+    if (!validateFormMail()) {
+        return;
+    }
+    setIsLoadingEmail(true);
+    setError(null);
+    const { email, password, rememberMe } = formData;
+    
+    try {
+        const response = await authService.login({
+            email: formData.email,
+            password: formData.password,
+        });
+        
+        const token = response.data.token; // Assurez-vous que le token est dans la réponse
+        setLoginSuccess(true);
+        setAuthCookie(token); // Stockez le token dans un cookie ou un état global
+
+        // Redirection vers le tableau de bord client
+        navigate('/customer-dashboard'); // Utilisez le hook navigate pour rediriger
+    } catch (error: any) {
+        toast.error(error.response?.data || 'An error occurred during registration');
+    } finally {
         setIsLoadingEmail(false);
-        } catch (error: any) {
-            toast.error(error.response?.data || 'An error occurred during registration');
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    }
+};
+
+// Assurez-vous d'initialiser le hook navigate au début de votre composant
+const navigate = useNavigate();
 
     return (
         <>
