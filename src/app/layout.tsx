@@ -1,69 +1,38 @@
+import './globals.css'
+import { Inter } from 'next/font/google'
 
-import "./globals.css";
-
-import "@public/styles/styles.scss";
-import "@public/styles/line-awesome.min.css";
-import ContextProvider from '@/components/context/context';
-import {getLocale, getMessages} from 'next-intl/server';
-import {NextIntlClientProvider} from 'next-intl';
-import ClientRootLayout from '@/app/layout/clientLayout';
-// import CookieConsent from '@/components/cookies/CookieConsent';
-import NewFooter from "@/components/general/NewFooter";
-import NewHeader from "@/components/general/NewHeader";
-import AuthLayoutContent from "@/app/layout/authLayout";
-import { URL } from "url";
-import {Toaster} from "react-hot-toast";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import 'react-phone-input-2/lib/style.css';
-import '@/styles/loading/spinner.css';
-import React from "react";
-import CookieRootLayout from "@/app/layout/cookieLayout";
-
-
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-    metadataBase: new URL("https://stage-bice-alpha.vercel.app/"),
-    title: "Discover Let's Go, Yowyob's transportation platform",
-    description: "Let's Go, the new mobility solution from Yowyob.Inc, allows you to easily book your rides with just a few clicks. Enjoy a reliable, secure, and eco-friendly service for your city commutes. Visit the Let's Go website now and start traveling in a more convenient and responsible way.",
-    openGraph:{
-        title: "Discover Let's Go, Yowyob's transportation platform",
-        type: "website",
-        description: "Let's Go, the new mobility solution from Yowyob.Inc, allows you to easily book your rides with just a few clicks",
-        locale: "en-US",
-        url: process.env.PROJECT_URL,
-        siteName:"Let's Go"
-    }
-};
+  title: 'Transport App - Réservation de courses avec QR code',
+  description: 'Application de transport avec système de QR code pour la validation des courses',
+  icons: {
+    icon: '/img/vehicleLogo.png',
+  },
+}
 
-export default async function RootLayout({
-    children,
+export default function RootLayout({
+  children,
 }: {
-    children: React.ReactNode;
+  children: React.ReactNode
 }) {
-    const locale = await getLocale();
-    const messages = await getMessages();
-    return (
-        <html lang={locale}>
-        <body className="flex flex-col min-h-screen bg-[var(--bg-1)] text-[var(--neutral-700)]">
-            <ToastContainer />
-            <Toaster toastOptions={{ duration: 4000 }} />
-            <ContextProvider>
-                <NextIntlClientProvider messages={messages}>
-                    <AuthLayoutContent>
-                        <ClientRootLayout>
-                            <NewHeader />
-                            <main className="flex-grow min-h-[72vh]">
-                                <CookieRootLayout>
-                                    {children}
-                                </CookieRootLayout>
-                            </main>
-                            <NewFooter />
-                        </ClientRootLayout>
-                    </AuthLayoutContent>
-                </NextIntlClientProvider>
-            </ContextProvider>
-        </body>
-        </html>
-    );
+  return (
+    <html lang="fr">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.css"
+        />
+        <script
+          src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"
+          async
+        ></script>
+      </head>
+      <body className={inter.className}>
+        <div className="fade-in">
+          {children}
+        </div>
+      </body>
+    </html>
+  )
 }
