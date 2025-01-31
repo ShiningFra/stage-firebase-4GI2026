@@ -6,6 +6,7 @@ import {loginWithEmailAndPassword} from "@/app/api/auth/login";
 import { setAuthCookie } from "@/app/lib/firebase";
 // import {toast} from "react-toastify";
 import { toast } from "react-hot-toast";
+import { authService } from "@/services/authService";
 
 
 
@@ -75,16 +76,19 @@ export default function LoginFormEmail({onForgottenPasswordClick,onSignUpClick}:
         setIsLoadingEmail(true);
         setError(null);
         const { email, password,rememberMe } = formData;
-        const {data,error}=await loginWithEmailAndPassword(email,password,rememberMe);
-        if(error) {
-            setIsLoadingEmail(false);
-            toast.error(error.message);
-            return;
-
-        }
-        setLoginSuccess(true);
+        try {
+            await authService.login({
+                email: formData.email,
+                password: formData.password,
+                });
+	setLoginSuccess(true);
         setAuthCookie()
         setIsLoadingEmail(false);
+        } catch (error: any) {
+            toast.error(error.response?.data || 'An error occurred during registration');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
