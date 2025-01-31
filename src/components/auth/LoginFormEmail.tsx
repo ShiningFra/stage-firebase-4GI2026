@@ -2,25 +2,19 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import ErrorTooltip from "./ErrorTooltip";
 import SuccessOverlay from "@/components/auth/SuccessOverlay";
 import { EyePassword, NoEyePassword } from "@/components/icon/passwordIcon";
-import {loginWithEmailAndPassword} from "@/app/api/auth/login";
 import { setAuthCookie } from "@/app/lib/firebase";
-// import {toast} from "react-toastify";
 import { toast } from "react-hot-toast";
+import { useRouter } from 'next/navigation'; // Pour les fichiers dans le dossier app
 import { authService } from "@/services/authService";
-import { useNavigate } from 'react-router-dom';
-
-
 
 interface LoginFormProps {
-    onForgottenPasswordClick:(callback: () => void) => void;
+    onForgottenPasswordClick: (callback: () => void) => void;
     onSignUpClick: (callback: () => void) => void;
-
 }
 
 interface FormData {
     email: string;
     password: string;
-    rememberMe: boolean;
 }
 
 interface MousePosition {
@@ -28,17 +22,18 @@ interface MousePosition {
     y: number;
 }
 
-export default function LoginFormEmail({onForgottenPasswordClick,onSignUpClick}:LoginFormProps) {
-
-    const [formData, setFormData] = useState<FormData>({ email: "", password: "", rememberMe: false });
+export default function LoginFormEmail({ onForgottenPasswordClick, onSignUpClick }: LoginFormProps) {
+    const [formData, setFormData] = useState<FormData>({ email: "", password: "" });
     const [error, setError] = useState<string | null>(null);
     const [mousePosition, setMousePosition] = useState<MousePosition>({ x: 0, y: 0 });
     const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
     const [isLoadingEmail, setIsLoadingEmail] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
+    
+    const router = useRouter();
 
     const resetForm = () => {
-        setFormData({ email: "", password: "", rememberMe: false });
+        setFormData({ email: "", password: "" });
         setError(null);
         setMousePosition({ x: 0, y: 0 });
         setLoginSuccess(false);
@@ -51,54 +46,49 @@ export default function LoginFormEmail({onForgottenPasswordClick,onSignUpClick}:
     };
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const { name, value, type, checked } = event.target;
+        const { name, value } = event.target;
         setFormData(prev => ({
             ...prev,
-            [name]: type === 'checkbox' ? checked : value
+            [name]: value
         }));
     };
 
     const validateFormMail = (): boolean => {
         if (!formData.email || !formData.password) {
-            // setError("Email and password are required.");
             toast.error("Email and password are required.");
             return false;
         }
         return true;
     };
 
-
-
     const handleSubmitEmail = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!validateFormMail()) {
-        return;
-    }
-    setIsLoadingEmail(true);
-    setError(null);
-    const { email, password, rememberMe } = formData;
-    
-    try {
-        const response = await authService.login({
-            email: formData.email,
-            password: formData.password,
-        });
-        
-        const token = response.data.token; // Assurez-vous que le token est dans la réponse
-        setLoginSuccess(true);
-        setAuthCookie(token); // Stockez le token dans un cookie ou un état global
+        event.preventDefault();
+        if (!validateFormMail()) {
+            return;
+        }
+        setIsLoadingEmail(true);
+        setError(null);
+        const { email, password } = formData;
 
-        // Redirection vers le tableau de bord client
-        navigate('/customer-dashboard'); // Utilisez le hook navigate pour rediriger
-    } catch (error: any) {
-        toast.error(error.response?.data || 'An error occurred during registration');
-    } finally {
-        setIsLoadingEmail(false);
-    }
-};
+        try {
+            // Appel à l'API pour la connexion
+            const response = await authService.login({
+                email,
+                password,
+            });
+            
+            const token = response.data.token; // Assurez-vous que le token est dans la réponse
+            setLoginSuccess(true);
+            setAuthCookie(token); // Stockez le token dans un cookie ou un état global
 
-// Assurez-vous d'initialiser le hook navigate au début de votre composant
-const navigate = useNavigate();
+            // Redirection vers le tableau de bord client
+            router.push('/customer-dashboard'); // Utilisez router.push pour rediriger
+        } catch (error: any) {
+            toast.error(error.response?.data || 'An error occurred during login');
+        } finally {
+            setIsLoadingEmail(false);
+        }
+    };
 
     return (
         <>
@@ -132,19 +122,9 @@ const navigate = useNavigate();
                 </div>
 
                 <div className="flex justify-between items-center mt-2 mb-4">
-                    <label className="flex items-center">
-                        <input
-                            type="checkbox"
-                            className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
-                            name="rememberMe"
-                            checked={formData.rememberMe}
-                            onChange={handleChange}
-                        />
-                        <span className="ml-2 text text-gray-600">Remember Me</span>
-                    </label>
                     <button
                         type="button"
-                        onClick={()=>{onForgottenPasswordClick(()=>resetForm())}}
+                        onClick={() => { onForgottenPasswordClick(() => resetForm()) }}
                         className="text text-indigo-600 font-medium hover:underline"
                     >
                         Forgot password?
@@ -159,14 +139,13 @@ const navigate = useNavigate();
                 >
                     {isLoadingEmail ? "Loading..." : "Continue"}
                 </button>
-                {/*{error && <ErrorTooltip message={error} position={mousePosition} />}*/}
             </form>
 
             <p className="mt-4 text-sm text-gray-600 text text-center">
                 Don't have an account yet?{" "}
                 <button
                     type="button"
-                    onClick={()=>{onSignUpClick(()=>resetForm())}}
+                    onClick={() => { onSignUpClick(() => resetForm()) }}
                     className="font-medium text-indigo-600 hover:underline"
                 >
                     Create your account
@@ -174,9 +153,8 @@ const navigate = useNavigate();
             </p>
             {loginSuccess && (
                 <SuccessOverlay
-
                     result="Login Successful!"
-                    message="Redirecting you to the dashboard...please wait !"
+                    message="Redirecting you to the dashboard...please wait!"
                     redirect="/customer-dashboard"
                 />
             )}

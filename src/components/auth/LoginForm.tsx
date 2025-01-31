@@ -22,7 +22,7 @@ export default function LoginForm({
             <LoginButtons />
             <div className="my-4 border-b text-center">
                 <div className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
-                    Or with email or phone
+                    Or with email
                 </div>
             </div>
             <div className="flex justify-center space-x-4 mb-4">
