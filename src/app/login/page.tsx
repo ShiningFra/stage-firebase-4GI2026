@@ -15,7 +15,7 @@ export default function Login() {
     e.preventDefault();
     try {
         const { token } = await authService.login({ email, password }); // Assurez-vous que le token est renvoyé
-        localStorage.setItem('authToken', token); // Stockez le token dans localStorage
+        localStorage.setItem('token', token); // Stockez le token dans localStorage
         const userRole = localStorage.getItem('userRole');
         if (userRole === 'CHAUFFEUR') {
             router.push('/chauffeur/dashboard');
