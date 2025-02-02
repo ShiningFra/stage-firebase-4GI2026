@@ -33,6 +33,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String email = null;
         String jwt = null;
         String role = null;
+String requestURI = request.getRequestURI();
+
+	if (requestURI.contains("/signup") || requestURI.contains("/login")) {
+        chain.doFilter(request, response);
+        return;
+    }
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);

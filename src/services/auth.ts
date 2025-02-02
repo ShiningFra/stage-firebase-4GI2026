@@ -29,7 +29,7 @@ export const authService = {
                 const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => 
                     '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
                 ).join(''));
-                
+
                 const { role } = JSON.parse(jsonPayload);
                 localStorage.setItem('userRole', role);
             } else {

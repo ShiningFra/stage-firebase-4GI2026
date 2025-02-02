@@ -20,21 +20,24 @@ public class SecurityConfig {
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.and())
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+   @Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(csrf -> csrf.disable()) // Désactive la protection CSRF
+        .cors(cors -> cors.and()) // Active CORS
+        .sessionManagement(session -> session
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless
+        .authorizeHttpRequests(auth -> auth
+            // Autorise toutes les requêtes vers les routes d'authentification
+            .requestMatchers("/api/auth/**").permitAll() // Connexion et inscription accessibles
+            // Toutes les autres requêtes nécessitent une authentification
+            .anyRequest().authenticated()
+        )
+        // Ajoute le filtre JWT avant l'authentification par nom d'utilisateur et mot de passe
+        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-    }
+    return http.build();
+}
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
