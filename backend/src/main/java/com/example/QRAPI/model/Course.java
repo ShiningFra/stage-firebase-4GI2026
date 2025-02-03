@@ -11,6 +11,7 @@ package com.example.QRAPI.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Data
@@ -20,9 +21,15 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @JsonProperty("lieu_depart")
     private String lieu_depart;
+
+    @JsonProperty("lieu_arrivee")
     private String lieu_arrivee;
+
     private Double prix;
+
+    @JsonProperty("date_depart")
     private String date_depart;
     
 
@@ -31,7 +38,7 @@ public class Course {
     private Chauffeur chauffeur; // Relation avec l'entité Chauffeur
     
     @ManyToOne
-    @JoinColumn(name = "client_id", nullable = false)
+    @JoinColumn(name = "client_id", nullable = true)
     private Client client; // Relation avec l'entité Chauffeur
     
     
@@ -83,4 +90,16 @@ public class Course {
     public Long getId(){
         return id;
     }
+
+@Override
+public String toString() {
+    return "Course{" +
+            "lieuDepart='" + lieu_depart + '\'' +
+            ", lieuArrivee='" + lieu_arrivee + '\'' +
+            ", prix=" + prix +
+            ", dateDepart=" + date_depart +
+            ", chauffeur=" + (chauffeur != null ? chauffeur.getId() : "null") +
+            '}';
+}
+
 }

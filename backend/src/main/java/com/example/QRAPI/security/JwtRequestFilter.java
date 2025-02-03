@@ -15,12 +15,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
+import com.example.QRAPI.repository.*;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtil jwtUtil;
+    
+    @Autowired
+    private ChauffeurRepository chauffeurRepository;
+    
+    @Autowired
+    private ClientRepository clientRepository;
 
     @Override
     protected void doFilterInternal(
@@ -29,55 +36,54 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             FilterChain chain) throws ServletException, IOException {
 
         final String authorizationHeader = request.getHeader("Authorization");
+        final String requestURI = request.getRequestURI();
 
-        String email = null;
-        String jwt = null;
-        String role = null;
-        String requestURI = request.getRequestURI();
-
-        // Exclure les routes publiques comme "/signup" et "/login"
+        // Exclure les routes publiques
         if (requestURI.contains("/signup") || requestURI.contains("/login")) {
             chain.doFilter(request, response);
             return;
         }
 
-        // Vérifier si le token JWT est présent
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
-            try {
-                email = jwtUtil.extractEmail(jwt);
-                role = jwtUtil.extractRole(jwt);
-            } catch (ExpiredJwtException e) {
-                // Le token est expiré, renvoyer une erreur
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT token is expired");
-                return;
-            } catch (Exception e) {
-                // Autres erreurs liées au JWT
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid JWT token");
-                return;
-            }
-        } else {
-            // Pas de token trouvé, renvoyer une erreur
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization header is missing or malformed");
             return;
         }
 
-        // Vérifier l'authentification si l'email est présent et le token est valide
-        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            if (jwt != null && jwtUtil.validateToken(jwt, email)) {
-                // Créer une autorité basée sur le rôle
+        String jwt = authorizationHeader.substring(7);
+        String email;
+        String role;
+
+        try {
+            email = jwtUtil.extractEmail(jwt);
+            role = jwtUtil.extractRole(jwt);
+        } catch (ExpiredJwtException e) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT token is expired");
+            return;
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid JWT token");
+            return;
+        }
+
+        if (email != null && jwtUtil.validateToken(jwt, email)) {
+            Object user = findUserByRoleAndEmail(role, email);
+            if (user != null) {
                 SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
-
-                // Créer un token d'authentification avec l'email et le rôle
                 UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(email, null, Collections.singletonList(authority));
-
+                        new UsernamePasswordAuthenticationToken(user, null, Collections.singletonList(authority));
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }
 
-        // Passer la requête au prochain filtre
         chain.doFilter(request, response);
+    }
+
+    private Object findUserByRoleAndEmail(String role, String email) {
+        if ("CHAUFFEUR".equals(role)) {
+            return chauffeurRepository.findByEmail(email).orElse(null);
+        } else if ("CLIENT".equals(role)) {
+            return clientRepository.findByEmail(email).orElse(null);
+        }
+        return null;
     }
 }

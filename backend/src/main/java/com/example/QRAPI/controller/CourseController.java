@@ -32,11 +32,12 @@ public class CourseController {
      * @return
      */
     @PostMapping("/publish")
-    @PreAuthorize("hasRole('ROLE_CHAUFFEUR')")
+    @PreAuthorize("hasRole('CHAUFFEUR')")
     public ResponseEntity<Course> publishCourse(@RequestBody Course course, @AuthenticationPrincipal Chauffeur chauffeur) {
         if (chauffeur == null) {
             return ResponseEntity.status(401).body(null); // 401 Unauthorized si le chauffeur n'est pas authentifié
         }
+	System.out.println("Données reçues backend : " + course);
 
         course.setChauffeur(chauffeur); // Associer le chauffeur à la course
         course.setClient(null); // Le client est null à la création
@@ -51,7 +52,7 @@ public class CourseController {
      * @return
      */
     @GetMapping("/my-courses")
-    @PreAuthorize("hasRole('ROLE_CHAUFFEUR')")
+    @PreAuthorize("hasRole('CHAUFFEUR')")
     public ResponseEntity<List<Course>> getMyCourses(@AuthenticationPrincipal Chauffeur chauffeur) {
         if (chauffeur == null) {
             return ResponseEntity.status(401).body(null); // 401 Unauthorized si le chauffeur n'est pas authentifié
@@ -78,7 +79,7 @@ public class CourseController {
      * @return
      */
     @PostMapping("/{courseId}/reserve")
-    @PreAuthorize("hasRole('ROLE_CLIENT')")
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<Course> reserveCourse(@PathVariable Long courseId, @AuthenticationPrincipal Client client) {
         if (client == null) {
             return ResponseEntity.status(401).body(null); // 401 Unauthorized si le client n'est pas authentifié
@@ -101,7 +102,7 @@ public class CourseController {
      * @return
      */
     @GetMapping("/my-reserved-courses")
-    @PreAuthorize("hasRole('ROLE_CHAUFFEUR')")
+    @PreAuthorize("hasRole('CHAUFFEUR')")
     public ResponseEntity<List<Course>> getMyReservedCourses(@AuthenticationPrincipal Chauffeur chauffeur) {
         if (chauffeur == null) {
             return ResponseEntity.status(401).body(null); // 401 Unauthorized si le chauffeur n'est pas authentifié
@@ -117,7 +118,7 @@ public class CourseController {
      * @return
      */
     @GetMapping("/my-accepted-courses")
-    @PreAuthorize("hasRole('ROLE_CLIENT')")
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<List<Course>> getMyAcceptedCourses(@AuthenticationPrincipal Client client) {
         if (client == null) {
             return ResponseEntity.status(401).body(null); // 401 Unauthorized si le client n'est pas authentifié
@@ -133,13 +134,13 @@ public class CourseController {
      * @return
      */
     @GetMapping("/my-incomplete-courses")
-    @PreAuthorize("hasRole('ROLE_CHAUFFEUR')")
+    @PreAuthorize("hasRole('CHAUFFEUR')")
     public ResponseEntity<List<Course>> getMyIncompleteCourses(@AuthenticationPrincipal Chauffeur chauffeur) {
         if (chauffeur == null) {
             return ResponseEntity.status(401).body(null); // 401 Unauthorized si le chauffeur n'est pas authentifié
         }
 
-        List<Course> incompleteCourses = courseRepository.findByChauffeurAndCompletedFalse(chauffeur); // Récupérer les courses non complétées
+        List<Course> incompleteCourses = courseRepository.findByChauffeurAndClientNotNullAndCompletedFalse(chauffeur); // Récupérer les courses non complétées
         return ResponseEntity.ok(incompleteCourses); // Retourner la liste des courses non complétées
     }
     
@@ -150,7 +151,7 @@ public class CourseController {
      * @return
      */
     @GetMapping("/my-reserved-incomplete-courses")
-    @PreAuthorize("hasRole('ROLE_CHAUFFEUR')")
+    @PreAuthorize("hasRole('CHAUFFEUR')")
     public ResponseEntity<List<Course>> getMyReservedIncompleteCourses(@AuthenticationPrincipal Chauffeur chauffeur) {
         if (chauffeur == null) {
             return ResponseEntity.status(401).body(null); // 401 Unauthorized si le chauffeur n'est pas authentifié
@@ -166,7 +167,7 @@ public class CourseController {
      * @return
      */
     @GetMapping("/my-completed-courses")
-    @PreAuthorize("hasRole('ROLE_CLIENT')")
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<List<Course>> getMyCompletedCourses(@AuthenticationPrincipal Client client) {
         if (client == null) {
             return ResponseEntity.status(401).body(null); // 401 Unauthorized si le client n'est pas authentifié
@@ -182,7 +183,7 @@ public class CourseController {
      * @return
      */
     @GetMapping("/my-completed-courses-driver")
-    @PreAuthorize("hasRole('ROLE_CHAUFFEUR')")
+    @PreAuthorize("hasRole('CHAUFFEUR')")
     public ResponseEntity<List<Course>> getMyCompletedCoursesDriver(@AuthenticationPrincipal Chauffeur chauffeur) {
         if (chauffeur == null) {
             return ResponseEntity.status(401).body(null); // 401 Unauthorized si le chauffeur n'est pas authentifié
@@ -199,7 +200,7 @@ public class CourseController {
     * @return
     */
     @DeleteMapping("/{courseId}/cancel")
-    @PreAuthorize("hasRole('ROLE_CLIENT')")
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<Void> cancelCourse(@PathVariable Long courseId, @AuthenticationPrincipal Client client) {
         if (client == null) {
             return ResponseEntity.status(401).build(); // 401 Unauthorized si le client n'est pas authentifié
@@ -224,7 +225,7 @@ public class CourseController {
     * @return
     */
     @DeleteMapping("/{courseId}/delete")
-    @PreAuthorize("hasRole('ROLE_CHAUFFEUR')")
+    @PreAuthorize("hasRole('CHAUFFEUR')")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long courseId, @AuthenticationPrincipal Chauffeur chauffeur) {
         if (chauffeur == null) {
             return ResponseEntity.status(401).build(); // 401 Unauthorized si le chauffeur n'est pas authentifié
@@ -246,7 +247,7 @@ public class CourseController {
     * @return
     */
     @PostMapping("/{courseId}/complete")
-    @PreAuthorize("hasRole('ROLE_CHAUFFEUR')")
+    @PreAuthorize("hasRole('CHAUFFEUR')")
     public ResponseEntity<Course> completeCourse(@PathVariable Long courseId, @AuthenticationPrincipal Chauffeur chauffeur) {
         if (chauffeur == null) {
             return ResponseEntity.status(401).body(null); // 401 Unauthorized si le chauffeur n'est pas authentifié
