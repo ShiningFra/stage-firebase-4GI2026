@@ -68,7 +68,18 @@ public class JwtUtil {
     }
 
     private Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+final Claims claims = extractAllClaims(token);
+Date expiration = claims.getExpiration();
+System.out.println("Expiration du token : " + expiration);
+System.out.println("Date actuelle : " + new Date());
+
+if (expiration.before(new Date())) {
+    System.out.println("Token expiré !");
+} else {
+    System.out.println("Token encore valide.");
+}
+
+        return (extractExpiration(token).before(new Date()));
     }
 
     public Boolean validateToken(String token, String email) {

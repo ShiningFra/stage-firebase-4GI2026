@@ -80,6 +80,23 @@ public class QRCodeController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/display")
+    public ResponseEntity<byte[]> View(
+            @RequestParam Long clientId,
+            @RequestParam Long chauffeurId,
+            @RequestParam Long courseId) {
+        try {
+            byte[] qrCodeImage = qrCodeService.viewQRCodeImage(clientId, chauffeurId, courseId);
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(org.springframework.http.MediaType.IMAGE_PNG);
+
+            return new ResponseEntity<>(qrCodeImage, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     
     @GetMapping("/hello")
     public String SayHello() {

@@ -10,7 +10,7 @@ import { authService } from '@/services/auth';
 export default function ChauffeurDashboard() {
   const router = useRouter();
   const [courses, setCourses] = useState<Course[]>([]);
-  const [reservedCourses, setReservedCourses] = useState<Course[]>([]); // Nouvel état pour les courses réservées
+  const [reservedCourses, setReservedCourses] = useState<Course[]>([]);
   const [showNewCourseForm, setShowNewCourseForm] = useState(false);
   const [newCourse, setNewCourse] = useState({
     depart: '',
@@ -18,44 +18,46 @@ export default function ChauffeurDashboard() {
     prix: '',
     date: ''
   });
-  const [activeTab, setActiveTab] = useState<'my-courses' | 'reserved-courses'>('my-courses'); // Onglets
+  const [activeTab, setActiveTab] = useState<'my-courses' | 'reserved-courses'>('my-courses');
 
-  const token = localStorage.getItem('token'); // Récupérer le token une fois
-
+  // Effet au montage pour vérifier le rôle et charger les données
   useEffect(() => {
     if (authService.getUserRole() !== 'CHAUFFEUR') {
       router.push('/login');
       return;
     }
     loadCourses();
-    loadReservedCourses(); // Charger les courses réservées
+    loadReservedCourses();
   }, []);
 
+  // Chargement des courses
   const loadCourses = async () => {
     try {
-      const myCourses = await courseService.getMyCourses(token as string);
+      const myCourses = await courseService.getMyCourses();
       setCourses(myCourses);
     } catch (error) {
       console.error('Erreur lors du chargement des courses:', error);
     }
   };
 
+  // Chargement des courses réservées
   const loadReservedCourses = async () => {
     try {
-      const myReservedCourses = await courseService.getMyReservedCourses(token as string);
+      const myReservedCourses = await courseService.getMyReservedCourses();
       setReservedCourses(myReservedCourses);
     } catch (error) {
       console.error('Erreur lors du chargement des courses réservées:', error);
     }
   };
 
+  // Soumission du formulaire de création de course
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await courseService.publishCourse({
         ...newCourse,
         prix: parseFloat(newCourse.prix)
-      }, token as string);
+      });
       setShowNewCourseForm(false);
       setNewCourse({ depart: '', destination: '', prix: '', date: '' });
       loadCourses();
@@ -64,6 +66,7 @@ export default function ChauffeurDashboard() {
     }
   };
 
+  // Gestion des changements dans le formulaire
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewCourse({
       ...newCourse,
@@ -86,6 +89,7 @@ export default function ChauffeurDashboard() {
           </button>
         </div>
 
+        {/* Onglets de navigation */}
         <div className="flex mb-6 space-x-4">
           <button
             className={`btn ${activeTab === 'my-courses' ? 'btn-primary' : 'bg-gray-200'}`}
@@ -107,11 +111,70 @@ export default function ChauffeurDashboard() {
           </button>
         </div>
 
+        {/* Formulaire pour publier une nouvelle course */}
+        {showNewCourseForm && (
+          <div className="bg-white p-6 mb-6 rounded-lg shadow">
+            <h2 className="text-xl font-semibold mb-4">Nouvelle Course</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label htmlFor="depart" className="block text-sm font-medium text-gray-700">Départ</label>
+                <input
+                  type="text"
+                  id="depart"
+                  name="depart"
+                  value={newCourse.depart}
+                  onChange={handleChange}
+                  className="mt-1 p-2 w-full border rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="destination" className="block text-sm font-medium text-gray-700">Destination</label>
+                <input
+                  type="text"
+                  id="destination"
+                  name="destination"
+                  value={newCourse.destination}
+                  onChange={handleChange}
+                  className="mt-1 p-2 w-full border rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="prix" className="block text-sm font-medium text-gray-700">Prix</label>
+                <input
+                  type="number"
+                  id="prix"
+                  name="prix"
+                  value={newCourse.prix}
+                  onChange={handleChange}
+                  className="mt-1 p-2 w-full border rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date</label>
+                <input
+                  type="date"
+                  id="date"
+                  name="date"
+                  value={newCourse.date}
+                  onChange={handleChange}
+                  className="mt-1 p-2 w-full border rounded"
+                  required
+                />
+              </div>
+              <button type="submit" className="btn btn-primary w-full">Publier la Course</button>
+            </form>
+          </div>
+        )}
+
+        {/* Affichage des courses en fonction de l'onglet actif */}
         <div>
           {activeTab === 'my-courses' && (
             <div>
               <h2 className="text-xl font-semibold mb-4">Mes Courses</h2>
-              <div className="grid-courses">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {courses.map((course) => (
                   <CourseCard key={course.id} course={course} />
                 ))}
@@ -122,7 +185,7 @@ export default function ChauffeurDashboard() {
           {activeTab === 'reserved-courses' && (
             <div>
               <h2 className="text-xl font-semibold mb-4">Courses Réservées</h2>
-              <div className="grid-courses">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {reservedCourses.map((course) => (
                   <CourseCard key={course.id} course={course} />
                 ))}
