@@ -95,16 +95,6 @@ public class QRCodeService {
         return generateQRCodeImageFromData(qrData);
     }
 
-    private String buildQRData(Client client, Chauffeur chauffeur, Course course) {
-        return new StringBuilder()
-                .append(client.getId()).append(":").append(chauffeur.getId()).append(":").append(course.getId()).append(":")
-                .append(client.getNom()).append(":").append(client.getPrenom()).append(":").append(client.getPhone()).append(":")
-                .append(chauffeur.getNom()).append(":").append(chauffeur.getPrenom()).append(":").append(chauffeur.getPhone()).append(":")
-                .append(course.getDepart()).append(":").append(course.getArrivee()).append(":").append(course.getDateDepart()).append(":")
-                .append(course.getPrix())
-                .toString();
-    }
-
     private byte[] generateQRCodeImageFromData(String qrData) throws WriterException, IOException {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         Map<EncodeHintType, Object> hintMap = new HashMap<>();

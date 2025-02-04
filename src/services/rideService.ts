@@ -1,86 +1,58 @@
 import api from '../api/axiosConfig';
 
-export interface Course {
-    id: number;
-    depart: string;
-    destination: string;
-    dateDepart: string;
-    prix: number;
-    completed: boolean;
-    chauffeur: any;
-    client: any;
+export interface RideRequest {
+    pickupLocation: string;
+    dropoffLocation: string;
+    startTime: string;
+    distance: number;
+    fare: number;
+    vehicleId?: number;
 }
 
-export const courseService = {
-    // Publier une nouvelle course (chauffeur seulement)
-    publishCourse: async (courseData: Omit<Course, 'id' | 'completed' | 'chauffeur' | 'client'>) => {
-        const response = await api.post('/api/courses/publish', courseData);
+export interface RideResponse {
+    id: number;
+    pickupLocation: string;
+    dropoffLocation: string;
+    startTime: string;
+    endTime: string | null;
+    distance: number;
+    fare: number;
+    status: string;
+    rating: number | null;
+    comment: string | null;
+    driver: any;
+    client: any;
+    vehicle: any;
+}
+
+export const rideService = {
+    publishRide: async (data: RideRequest) => {
+        const response = await api.post('/rides', data);
         return response.data;
     },
 
-    // Obtenir toutes les courses disponibles
-    getAvailableCourses: async () => {
-        const response = await api.get('/api/courses/available');
+    getAllPublishedRides: async () => {
+        const response = await api.get('/rides');
         return response.data;
     },
 
-    // Obtenir mes courses (chauffeur)
-    getMyCourses: async () => {
-        const response = await api.get('/api/courses/my-courses');
+    getDriverRides: async () => {
+        const response = await api.get('/rides/driver');
         return response.data;
     },
 
-    // Réserver une course (client)
-    reserveCourse: async (courseId: number) => {
-        const response = await api.post(`/api/courses/${courseId}/reserve`);
+    getClientRides: async () => {
+        const response = await api.get('/rides/client');
         return response.data;
     },
 
-    // Obtenir mes courses réservées (chauffeur)
-    getMyReservedCourses: async () => {
-        const response = await api.get('/api/courses/my-reserved-courses');
+    updateRideStatus: async (rideId: number, status: string) => {
+        const response = await api.put(`/rides/${rideId}/status?status=${status}`);
         return response.data;
     },
 
-    // Obtenir mes courses acceptées (client)
-    getMyAcceptedCourses: async () => {
-        const response = await api.get('/api/courses/my-accepted-courses');
-        return response.data;
-    },
-
-    // Obtenir mes courses non complétées (chauffeur)
-    getMyIncompleteCourses: async () => {
-        const response = await api.get('/api/courses/my-incomplete-courses');
-        return response.data;
-    },
-
-    // Obtenir mes courses réservées non complétées (chauffeur)
-    getMyReservedIncompleteCourses: async () => {
-        const response = await api.get('/api/courses/my-reserved-incomplete-courses');
-        return response.data;
-    },
-
-    // Obtenir l'historique des courses complétées (client)
-    getMyCompletedCourses: async () => {
-        const response = await api.get('/api/courses/my-completed-courses');
-        return response.data;
-    },
-
-    // Obtenir l'historique des courses complétées (chauffeur)
-    getMyCompletedCoursesDriver: async () => {
-        const response = await api.get('/api/courses/my-completed-courses-driver');
-        return response.data;
-    },
-
-    // Annuler une course (client)
-    cancelCourse: async (courseId: number) => {
-        const response = await api.delete(`/api/courses/${courseId}/cancel`);
-        return response.data;
-    },
-
-    // Compléter une course (chauffeur)
-    completeCourse: async (courseId: number) => {
-        const response = await api.post(`/api/courses/${courseId}/complete`);
+    rateRide: async (rideId: number, rating: number, comment?: string) => {
+        const response = await api.put(`/rides/${rideId}/rating`, { rating, comment });
         return response.data;
     }
 };

@@ -25,6 +25,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping("/api/qr")
@@ -39,6 +40,7 @@ public class QRCodeController {
     }
 
     // Générer un code QR et le retourner sous forme d'image
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/generate")
     public ResponseEntity<byte[]> generateQRCode(
             @RequestParam Long clientId,
@@ -57,6 +59,7 @@ public class QRCodeController {
     }
 
     // Scanner un QR Code et valider
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/scan")
     public ResponseEntity<String> scanQRCode(@RequestParam String qrCodeData) {
         try {
@@ -67,6 +70,7 @@ public class QRCodeController {
         }
     }
     
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/view")
     public ResponseEntity<byte[]> View(@RequestParam String qrCodeData) {
         try {
@@ -81,6 +85,7 @@ public class QRCodeController {
         }
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/display")
     public ResponseEntity<byte[]> View(
             @RequestParam Long clientId,
@@ -98,6 +103,7 @@ public class QRCodeController {
         }
     }
     
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/hello")
     public String SayHello() {
         return "Hello : Your Project is running ❣";

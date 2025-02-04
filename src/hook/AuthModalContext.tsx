@@ -55,9 +55,8 @@
 //     return useContext(AuthModalContext);
 // };
 
-// context/AuthModalContext.tsx
+// AuthModalContext.tsx
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { AuthProvider, useAuth } from './AuthContext'; // Assurez-vous que le chemin est correct
 
 interface AuthModalContextType {
     isLoginModal: boolean;
@@ -81,10 +80,10 @@ export const AuthModalProvider: React.FC<AuthModalProviderProps> = ({ children }
     const [isLoginModal, setIsLoginModal] = useState<boolean>(false);
     const [isRegisterModal, setIsRegisterModal] = useState<boolean>(false);
     const [isForgottenPasswordModal, setIsForgottenPasswordModal] = useState<boolean>(false);
- 
+
     const openRegisterModal = (): void => setIsRegisterModal(true);
     const closeRegisterModal = (): void => setIsRegisterModal(false);
-    
+
     const openLoginModal = (): void => {
         setIsLoginModal(true);
     };
@@ -114,11 +113,9 @@ export const AuthModalProvider: React.FC<AuthModalProviderProps> = ({ children }
     };
 
     return (
-        <AuthProvider>
-            <AuthModalContext.Provider value={contextValue}>
-                {children}
-            </AuthModalContext.Provider>
-        </AuthProvider>
+        <AuthModalContext.Provider value={contextValue}>
+            {children}
+        </AuthModalContext.Provider>
     );
 };
 
