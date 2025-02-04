@@ -18,30 +18,44 @@ const ClientDashboard = () => {
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false); // Dialogue de confirmation pour accepter la course
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const available = await courseService.getAvailableCourses();
-      const accepted = await courseService.getMyAcceptedCourses();
-      const completed = await courseService.getMyCompletedCourses();
-      setAvailableRides(available);
-      setAcceptedRides(accepted);
-      setCompletedRides(completed);
-    };
+  const fetchData = async () => {
+    const available = await courseService.getAvailableCourses();
+    const accepted = await courseService.getMyAcceptedCourses();
+    const completed = await courseService.getMyCompletedCourses();
+    setAvailableRides(available);
+    setAcceptedRides(accepted);
+    setCompletedRides(completed);
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
 
   const handleReserveRide = async (courseId) => {
-    // Ouvrir le dialogue de confirmation
     const acceptedCourse = await courseService.reserveCourse(courseId);
     if (acceptedCourse) {
-      // Afficher un dialogue pour confirmer la réservation
-      setIsConfirmDialogOpen(true);
-      setSelectedCourse({
+      fetchData();
+      // Stocker les valeurs dans une variable temporaire
+      const updatedSelectedCourse = {
         clientId: acceptedCourse.client.id,
         chauffeurId: acceptedCourse.chauffeur.id,
         courseId: acceptedCourse.id,
+      };
+      
+      // Mettre à jour l'état
+      setSelectedCourse(updatedSelectedCourse);
+
+      // Exécuter immédiatement la requête avec la variable temporaire
+      const response = await axios.get('http://localhost:8080/api/qr/generate', {
+        params: {
+          clientId: updatedSelectedCourse.clientId,
+          chauffeurId: updatedSelectedCourse.chauffeurId,
+          courseId: updatedSelectedCourse.courseId,
+        },
+        responseType: 'arraybuffer', // Réponse en format binaire
       });
+
+      console.log("QR Code généré avec succès", response.data);
     }
   };
 
@@ -55,13 +69,16 @@ const ClientDashboard = () => {
   };
 
   const handleConfirmReservation = async () => {
-    // Ici, tu peux éventuellement mettre à jour l'état de la réservation après confirmation si nécessaire
     setIsConfirmDialogOpen(false);
+    fetchData(); // Actualiser les courses après réservation
   };
 
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Dashboard Client</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Dashboard Client</h1>
+        <Button onClick={fetchData}>Actualiser</Button>
+      </div>
       
       <section>
         <h2 className="text-xl font-semibold">Courses disponibles</h2>
@@ -105,7 +122,6 @@ const ClientDashboard = () => {
         </div>
       </section>
 
-      {/* Dialogue de confirmation d'acceptation de course */}
       <Dialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -118,13 +134,11 @@ const ClientDashboard = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Dialogue pour afficher le QR Code */}
       <Dialog open={showView} onOpenChange={setShowView}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Voir QRCode</DialogTitle>
           </DialogHeader>
-          {/* Passer l'ID de la course pour que View récupère l'image QR */}
           <View clientId={selectedCourse?.clientId} chauffeurId={selectedCourse?.chauffeurId} courseId={selectedCourse?.courseId} />
         </DialogContent>
       </Dialog>
