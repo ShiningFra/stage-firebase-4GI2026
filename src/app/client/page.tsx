@@ -45,17 +45,49 @@ const ClientDashboard = () => {
       // Mettre à jour l'état
       setSelectedCourse(updatedSelectedCourse);
 
-      // Exécuter immédiatement la requête avec la variable temporaire
-      const response = await axios.get('http://localhost:8080/api/qr/generate', {
-        params: {
-          clientId: updatedSelectedCourse.clientId,
-          chauffeurId: updatedSelectedCourse.chauffeurId,
-          courseId: updatedSelectedCourse.courseId,
-        },
-        responseType: 'arraybuffer', // Réponse en format binaire
-      });
+// Exemple de token JWT récupéré précédemment
+const token = '<TOKEN>';
 
-      console.log("QR Code généré avec succès", response.data);
+// Génération du QR Code
+const response = await axios.post(
+  'http://localhost:8080/api/qr/generate?secret=MaSuperCleSecrete&expirationMillis=3600000',
+  {
+    clientId: updatedSelectedCourse.clientId,
+    chauffeurId: updatedSelectedCourse.chauffeurId,
+    courseId: updatedSelectedCourse.courseId,
+    // Ajoutez d'autres champs si nécessaire :
+    lieu: updatedSelectedCourse.lieu,
+    heure: updatedSelectedCourse.heure,
+    date: updatedSelectedCourse.date,
+    ville: updatedSelectedCourse.ville,
+    pays: updatedSelectedCourse.pays,
+  },
+  {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    responseType: 'arraybuffer', // Pour recevoir la réponse en binaire (image PNG)
+  }
+);
+
+console.log("QR Code généré avec succès", response.data);
+
+// Sauvegarde du QR Code en appelant l'API de sauvegarde avec courseId comme nom de fichier
+const saveResponse = await axios.post(
+  `http://localhost:5000/api/files/save/${updatedSelectedCourse.courseId}`,
+  response.data, // On passe directement les données binaires du QR Code
+  {
+    headers: {
+      'Content-Type': 'application/octet-stream', // Pour envoyer le binaire
+    },
+    responseType: 'json',
+  }
+);
+
+console.log("QR Code sauvegardé avec succès", saveResponse.data);
+
+
     }
   };
 

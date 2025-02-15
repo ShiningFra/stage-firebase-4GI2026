@@ -24,8 +24,7 @@ export interface Course {
 }
 
 export const courseService = {
-
-     // Client : Accepter une course
+    // Client : Accepter une course
     acceptCourse: async (courseId: number) => {
         const response = await api.post(`/courses/${courseId}/reserve`);
         return response.data;  // La réponse pourrait contenir des informations sur la course ou un message de confirmation
@@ -33,7 +32,7 @@ export const courseService = {
 
     // Chauffeur : Publier une nouvelle course
     publishCourse: async (course: Partial<Course>) => {
-console.log("Données envoyées :", course);
+        console.log("Données envoyées :", course);
         const response = await api.post('/courses/publish', course);
         return response.data;
     },
@@ -95,6 +94,12 @@ console.log("Données envoyées :", course);
     // Chauffeur : Supprimer une course
     deleteCourse: async (courseId: number) => {
         const response = await api.delete(`/courses/${courseId}/delete`);
+        return response.data;
+    },
+
+    // Chauffeur : Compléter une course
+    completeCourse: async (courseId: number) => {
+        const response = await api.post(`/courses/${courseId}/complete`);
         return response.data;
     }
 };
