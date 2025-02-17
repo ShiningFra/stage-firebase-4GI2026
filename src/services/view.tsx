@@ -13,7 +13,7 @@ export const View: React.FC<ViewProps> = ({ courseId }) => {
     const fetchQRCode = async () => {
       try {
         // Appel à l'API pour récupérer le fichier image correspondant à courseId
-        const response = await axios.get(`http://localhost:8080/api/files/file/${courseId}`, {
+        const response = await axios.get(`http://localhost:5000/api/files/file/${courseId}`, {
           responseType: 'arraybuffer', // Réponse en format binaire
         });
 

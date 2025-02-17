@@ -46,7 +46,7 @@ const ClientDashboard = () => {
       setSelectedCourse(updatedSelectedCourse);
 
 // Exemple de token JWT récupéré précédemment
-const token = '<TOKEN>';
+const token = 'eyJhbGciOiJIUzUxMiJ9.eyJwcm92aWRlciI6IkZyYSIsInN1YiI6IkZyYSIsImlhdCI6MTczOTYzNjUwM30.xNcbEJzYBFIF-ALaOfMZ1YcpbFTw4IQm9C2fA3swh5rCsXCjJoYtXGWL3rsi2p58gxPieQYhs3RNC9FgAklsjA';
 
 // Génération du QR Code
 const response = await axios.post(

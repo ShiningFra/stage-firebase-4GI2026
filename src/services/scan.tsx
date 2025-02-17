@@ -51,7 +51,7 @@ const Scan = () => {
         headers: {
           "Content-Type": "application/json",
           // Ajoutez un header Authorization si nécessaire :
-          //"Authorization": "Bearer <TOKEN>"
+          "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJwcm92aWRlciI6IkZyYSIsInN1YiI6IkZyYSIsImlhdCI6MTczOTYzNjUwM30.xNcbEJzYBFIF-ALaOfMZ1YcpbFTw4IQm9C2fA3swh5rCsXCjJoYtXGWL3rsi2p58gxPieQYhs3RNC9FgAklsjA"
         },
         body: JSON.stringify(history),
       });
